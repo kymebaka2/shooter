@@ -11,8 +11,8 @@ display.set_caption('Шутер')
 background = transform.scale(image.load('galaxy.jpg'), (700, 500))
 clock = time.Clock()
 FPS = 60
-
-
+aimmo = 20
+cooldown = 3
 class GameSprite(sprite.Sprite):
     skip = 0
     point = 0
@@ -96,6 +96,7 @@ game = True
 finish = False
 loose = False
 wyn = False
+reload = False
 
 while game:
     keys_pressed = key.get_pressed()
@@ -109,10 +110,19 @@ while game:
         if e.type == QUIT:
             game = False
         elif e.type == KEYDOWN:
-            if e.key == K_SPACE:
+            if e.key == K_SPACE and aimmo > 0:
                 bullet = Bullet('bullet.png',(20,50), 6, player.rect.x + 45, player.rect.y )
                 bullets.add(bullet)
                 fire.play()
+                aimmo -= 1
+                podojdi = FPS * cooldown
+    if aimmo <= 0:
+        
+        podojdi -= 1
+        if podojdi <= 0:
+            aimmo = 20
+
+
 
     if not finish:
         player.update()
